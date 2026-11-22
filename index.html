@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PocketRead — NetNewsWire 中英文阅读主题</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23FAF8F4' stroke='%23E2DDD3' stroke-width='3'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='34' font-weight='700' fill='%231A1918'%3EP%3C/text%3E%3C/svg%3E" />
     <meta name="description"
         content="一款 NetNewsWire 中英文阅读主题：1.07x 动态字号、顶格紧凑段距、Semibold 600 粗体、暖纸与深黑配色，清理常见源站多余空行与暗色内联样式。" />
     <style>
@@ -14,7 +15,7 @@
             --font-display: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Display", "Hiragino Sans GB", sans-serif;
             --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-            /* PocketRead Warm Paper Light Palette (matches stylesheet.css) */
+            /* Page Light Palette */
             --bg: #FAF8F4;
             --bg-glow: rgba(24, 94, 194, 0.055);
             --surface: #F2EEE6;
@@ -26,28 +27,22 @@
             --line-strong: rgba(28, 25, 21, 0.16);
             --accent: #185EC2;
             --accent-ink: #FFFFFF;
-            --bezel: #E2DDD3;
-            --phone-bg: #FAF8F4;
-            --phone-shadow: 0 24px 64px rgba(24, 20, 15, 0.10), 0 0 0 1px rgba(28, 25, 21, 0.08);
         }
 
-        html[data-theme="dark"] {
-            color-scheme: dark;
-            /* PocketRead OLED Dark Palette (matches stylesheet.css) */
-            --bg: #0B0B0D;
-            --bg-glow: rgba(105, 167, 255, 0.06);
-            --surface: #17171C;
-            --card: #1D1D23;
-            --ink: #F4F2ED;
-            --body: #DFDDD7;
-            --muted: #88847C;
-            --line: rgba(255, 255, 255, 0.10);
-            --line-strong: rgba(255, 255, 255, 0.18);
-            --accent: #69A7FF;
-            --accent-ink: #0B0B0D;
-            --bezel: #25252C;
-            --phone-bg: #0B0B0D;
-            --phone-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0B0B0D;
+                --bg-glow: rgba(105, 167, 255, 0.06);
+                --surface: #17171C;
+                --card: #1D1D23;
+                --ink: #F4F2ED;
+                --body: #DFDDD7;
+                --muted: #88847C;
+                --line: rgba(255, 255, 255, 0.10);
+                --line-strong: rgba(255, 255, 255, 0.18);
+                --accent: #69A7FF;
+                --accent-ink: #0B0B0D;
+            }
         }
 
         * {
@@ -212,7 +207,10 @@
         /* Case Switcher Tabs */
         .controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 24px;
         }
 
@@ -255,14 +253,87 @@
         }
 
         .phone {
+            --p-bg: #FAF8F4;
+            --p-ink: #1A1918;
+            --p-body: #5A5957;
+            --p-muted: #8C8882;
+            --p-line: rgba(28, 25, 21, 0.08);
+            --p-bezel: #E2DDD3;
+            --p-shadow: 0 24px 64px rgba(24, 20, 15, 0.10), 0 0 0 1px rgba(28, 25, 21, 0.08);
+
             width: min(100%, 402px);
             border-radius: 46px;
-            background: var(--phone-bg);
-            box-shadow: var(--phone-shadow);
+            background: var(--p-bg);
+            box-shadow: var(--p-shadow);
             overflow: hidden;
             position: relative;
-            border: 10px solid var(--bezel);
-            transition: background-color 180ms ease, border-color 180ms ease;
+            border: 10px solid var(--p-bezel);
+            transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .phone[data-mode="dark"] {
+            --p-bg: #0B0B0D;
+            --p-ink: #F4F2ED;
+            --p-body: #DFDDD7;
+            --p-muted: #88847C;
+            --p-line: rgba(255, 255, 255, 0.10);
+            --p-bezel: #25252C;
+            --p-shadow: 0 30px 90px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Realistic NetNewsWire Default RSS comparison */
+        .phone[data-style="default"] {
+            --p-bg: #FFFFFF;
+            --p-ink: #000000;
+            --p-body: #111111;
+            --p-muted: #767676;
+            --p-line: rgba(0, 0, 0, 0.12);
+        }
+
+        .phone[data-style="default"][data-mode="dark"] {
+            --p-bg: #000000;
+            --p-ink: #FFFFFF;
+            --p-body: #E5E5EA;
+            --p-muted: #8E8E93;
+            --p-line: rgba(255, 255, 255, 0.14);
+        }
+
+        .phone[data-style="default"] .screen {
+            padding: 8px 16px 36px;
+            font-size: 14.9px;
+            line-height: 1.52;
+        }
+
+        .phone[data-style="default"] .p-h1 {
+            font-size: 20px;
+            text-wrap: wrap;
+        }
+
+        .phone[data-style="default"] .p-body p,
+        .phone[data-style="default"] .p-body.en p {
+            margin: 0 0 1.0em;
+            letter-spacing: 0;
+        }
+
+        .phone[data-style="default"] .p-body b,
+        .phone[data-style="default"] .p-body strong {
+            color: inherit;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .phone[data-style="default"][data-mode="dark"] .p-body b,
+        .phone[data-style="default"][data-mode="dark"] .p-body strong {
+            color: inherit !important;
+        }
+
+        .raw-gap {
+            display: none;
+        }
+
+        .phone[data-style="default"] .raw-gap {
+            display: block;
+            margin: 0 0 1.0em;
         }
 
         .statusbar {
@@ -273,7 +344,7 @@
             padding: 0 24px;
             font-size: 14px;
             font-weight: 600;
-            color: var(--ink);
+            color: var(--p-ink);
             user-select: none;
             position: relative;
             z-index: 5;
@@ -305,8 +376,8 @@
         .screen {
             padding: 8px 22px 36px;
             min-height: 480px;
-            background: var(--phone-bg);
-            color: var(--body);
+            background: var(--p-bg);
+            color: var(--p-body);
             font-size: 16px;
             line-height: 1.64;
             text-align: left;
@@ -337,7 +408,7 @@
         .p-feed {
             font-size: 12.5px;
             font-weight: 600;
-            color: var(--muted);
+            color: var(--p-muted);
         }
 
         .p-h1 {
@@ -346,7 +417,7 @@
             line-height: 1.32;
             font-weight: 700;
             letter-spacing: -0.015em;
-            color: var(--ink);
+            color: var(--p-ink);
             margin: 0 0 6px;
             text-align: left;
             text-wrap: pretty;
@@ -354,13 +425,13 @@
 
         .p-meta {
             font-size: 11.5px;
-            color: var(--muted);
+            color: var(--p-muted);
             margin-bottom: 12px;
         }
 
         .p-div {
             border: none;
-            border-top: 1px solid var(--line);
+            border-top: 1px solid var(--p-line);
             margin: 0 0 14px;
         }
 
@@ -381,14 +452,18 @@
             letter-spacing: 0.01em;
         }
 
-        html[data-theme="dark"] .p-body b,
-        html[data-theme="dark"] .p-body strong {
+        .phone[data-mode="dark"]:not([data-style="default"]) .p-body [style*="color"] {
+            color: inherit !important;
+        }
+
+        .phone[data-mode="dark"]:not([data-style="default"]) .p-body b,
+        .phone[data-mode="dark"]:not([data-style="default"]) .p-body strong {
             color: #F4F2ED !important;
         }
 
         .p-sub {
             font-weight: 700;
-            color: var(--ink);
+            color: var(--p-ink);
             margin: 1.05em 0 0.3em !important;
             font-size: 16.5px;
         }
@@ -614,10 +689,6 @@
                     <a href="#details">排版细节</a>
                     <a href="#install">安装</a>
                 </div>
-                <div class="theme-switch" role="group" aria-label="切换明暗模式">
-                    <button id="t-light" class="active" onclick="setMode('light')">暖纸</button>
-                    <button id="t-dark" onclick="setMode('dark')">深黑</button>
-                </div>
             </div>
         </nav>
 
@@ -636,10 +707,18 @@
                     <button onclick="switchCase('investigation')">特写调查</button>
                     <button onclick="switchCase('english')">英文原版</button>
                 </div>
+                <div class="theme-switch" role="group" aria-label="对比主题与原 RSS 默认样式">
+                    <button id="s-pocket" class="active" onclick="setStyle('pocketread')">PocketRead</button>
+                    <button id="s-default" onclick="setStyle('default')">原 RSS</button>
+                </div>
+                <div class="theme-switch" role="group" aria-label="切换预览明暗模式">
+                    <button id="t-light" class="active" onclick="setMode('light')">暖纸</button>
+                    <button id="t-dark" onclick="setMode('dark')">深黑</button>
+                </div>
             </div>
 
             <div class="stage-wrap">
-                <div class="phone">
+                <div class="phone" id="phone-preview">
                     <div class="statusbar" aria-hidden="true">
                         <span class="sb-time">9:41</span>
                         <div class="island"></div>
@@ -751,10 +830,10 @@
                     <h3>链接唤起导入</h3>
                     <p>在装有 NetNewsWire 的设备上打开本页，点击下方按钮即可唤起导入：</p>
                     <div style="margin: 16px 0;">
-                        <a class="btn btn-pri" id="btn-nnw" href="#">在 NetNewsWire 中打开</a>
+                        <a class="btn btn-pri" id="btn-nnw" href="netnewswire://theme/add?url=https%3A%2F%2Fgithub.com%2Ffishyo%2Fpocketread-nnw-theme%2Freleases%2Fdownload%2Fv1.0.0%2FPocketRead.nnwtheme.zip">在 NetNewsWire 中打开</a>
                     </div>
                     <div style="margin-top: 10px;">
-                        <a class="btn btn-sec" href="https://github.com/fishyo/pocketread-nnw-theme/releases/latest/download/PocketRead.nnwtheme.zip" download>下载主题包 (.zip)</a>
+                        <a class="btn btn-sec" href="https://github.com/fishyo/pocketread-nnw-theme/releases/download/v1.0.0/PocketRead.nnwtheme.zip" download>下载主题包 (.zip)</a>
                     </div>
                 </div>
 
@@ -804,7 +883,9 @@
                 meta: '晚点团队 · 2026年11月21日 14:30',
                 html: `
         <p>11 月的无锡已有了初冬的寒意，太湖边的药明康德研发中心大楼依然彻夜通明。</p>
+        <p class="raw-gap"><br /></p>
         <p>过去这一年，全球生物医药融资节奏明显放缓。在资本退潮与地缘博弈的双重夹击下，国内 CXO 行业正在经历一次漫长而剧烈的估值重构。</p>
+        <p class="raw-gap"><br /></p>
         <p class="p-sub">漏斗里的竞赛</p>
         <p>核心商业模式是将药物发现、工艺开发与商业化生产整合在同一体系内。对药明康德来说，这不仅是一场效率战，更是一场对抗地缘不确定性的防御战。</p>
         <p>一位接近药明高层的人士透露：“我们目前在新加坡与美国特拉华州的海外产能扩建都在按既定节奏推进。”</p>
@@ -869,25 +950,30 @@
             renderArticle();
         }
 
-        function setMode(mode) {
-            const html = document.documentElement;
-            if (mode === 'dark') {
-                html.setAttribute('data-theme', 'dark');
-                document.getElementById('t-dark').classList.add('active');
-                document.getElementById('t-light').classList.remove('active');
+        function setStyle(style) {
+            const phone = document.getElementById('phone-preview');
+            if (style === 'default') {
+                phone.setAttribute('data-style', 'default');
+                document.getElementById('s-default').classList.add('active');
+                document.getElementById('s-pocket').classList.remove('active');
             } else {
-                html.removeAttribute('data-theme');
-                document.getElementById('t-light').classList.add('active');
-                document.getElementById('t-dark').classList.remove('active');
+                phone.removeAttribute('data-style');
+                document.getElementById('s-pocket').classList.add('active');
+                document.getElementById('s-default').classList.remove('active');
             }
         }
 
-        // Auto setup NetNewsWire URL scheme if loaded on HTTP
-        if (window.location.protocol.startsWith('http')) {
-            const zipUrl = new URL('PocketRead.nnwtheme.zip', window.location.href).href;
-            document.getElementById('btn-nnw').href = 'netnewswire://theme/add?url=' + encodeURIComponent(zipUrl);
-        } else {
-            document.getElementById('btn-nnw').href = 'netnewswire://theme/add?url=' + encodeURIComponent('https://github.com/fishyo/pocketread-nnw-theme/releases/latest/download/PocketRead.nnwtheme.zip');
+        function setMode(mode) {
+            const phone = document.getElementById('phone-preview');
+            if (mode === 'dark') {
+                phone.setAttribute('data-mode', 'dark');
+                document.getElementById('t-dark').classList.add('active');
+                document.getElementById('t-light').classList.remove('active');
+            } else {
+                phone.removeAttribute('data-mode');
+                document.getElementById('t-light').classList.add('active');
+                document.getElementById('t-dark').classList.remove('active');
+            }
         }
 
         // Initial render
