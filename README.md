@@ -2,6 +2,8 @@
 
 干净、紧凑的 NetNewsWire 中英文阅读主题（A clean, compact CJK & English reading theme for NetNewsWire）。
 
+![PocketRead Preview](screenshots/theme-preview.png)
+
 - **在线预览**：[https://fishyo.github.io/pocketread-nnw-theme/](https://fishyo.github.io/pocketread-nnw-theme/)
 - **一键安装**：[在 NetNewsWire 中打开](netnewswire://theme/add?url=https%3A%2F%2Fgithub.com%2Ffishyo%2Fpocketread-nnw-theme%2Freleases%2Fdownload%2Fv1.0.0%2FPocketRead.nnwtheme.zip)
 - **直接下载**：[PocketRead.nnwtheme.zip (v1.0)](https://github.com/fishyo/pocketread-nnw-theme/releases/download/v1.0.0/PocketRead.nnwtheme.zip)
