@@ -1,0 +1,1066 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PocketRead — A CJK &amp; English Theme for NetNewsWire</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23FAF8F4' stroke='%23E2DDD3' stroke-width='3'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='-apple-system,BlinkMacSystemFont,sans-serif' font-size='34' font-weight='700' fill='%231A1918'%3EP%3C/text%3E%3C/svg%3E" />
+    <meta name="description"
+        content="A clean, compact CJK & English reading theme for NetNewsWire: 1.07x type scale, tight flush-left paragraphs, Semibold 600 emphasis, warm paper & dark modes, and CJK feed cleanup." />
+    <style>
+        :root {
+            color-scheme: light dark;
+            --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Text", "Hiragino Sans GB", sans-serif;
+            --font-display: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Display", "Hiragino Sans GB", sans-serif;
+            --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+            /* Page Light Palette */
+            --bg: #FAF8F4;
+            --bg-glow: rgba(24, 94, 194, 0.055);
+            --surface: #F2EEE6;
+            --card: #FFFFFF;
+            --ink: #1A1918;
+            --body: #5A5957;
+            --muted: #8C8882;
+            --line: rgba(28, 25, 21, 0.08);
+            --line-strong: rgba(28, 25, 21, 0.16);
+            --accent: #185EC2;
+            --accent-ink: #FFFFFF;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #0B0B0D;
+                --bg-glow: rgba(105, 167, 255, 0.06);
+                --surface: #17171C;
+                --card: #1D1D23;
+                --ink: #F4F2ED;
+                --body: #DFDDD7;
+                --muted: #88847C;
+                --line: rgba(255, 255, 255, 0.10);
+                --line-strong: rgba(255, 255, 255, 0.18);
+                --accent: #69A7FF;
+                --accent-ink: #0B0B0D;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--bg);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(760px 440px at 50% 120px, var(--bg-glow), transparent 70%), var(--bg);
+            color: var(--body);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.64;
+            transition: background-color 180ms ease, color 180ms ease;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.86em;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        .container {
+            width: min(100%, 860px);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+
+        .brand-ver {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--line-strong);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 13.5px;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            transition: color 120ms ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        .theme-switch {
+            display: inline-flex;
+            padding: 3px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+
+        .theme-switch button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 140ms ease, color 140ms ease;
+        }
+
+        .theme-switch button.active {
+            background: var(--ink);
+            color: var(--bg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 44px 0 36px;
+            text-align: center;
+        }
+
+        .kicker {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            margin: 0 auto 14px;
+            max-width: 660px;
+            font-family: var(--font-display);
+            font-size: clamp(28px, 5.2vw, 44px);
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+        }
+
+        .hero .lead {
+            margin: 0 auto 28px;
+            max-width: 580px;
+            font-size: 15.5px;
+            line-height: 1.72;
+            color: var(--muted);
+        }
+
+        /* Case Switcher Tabs */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .pill-group {
+            display: inline-flex;
+            padding: 4px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .pill-group button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 140ms ease, color 140ms ease;
+        }
+
+        .pill-group button.active {
+            background: var(--card);
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Phone Mockup Showcase */
+        .stage-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .phone {
+            --p-bg: #FAF8F4;
+            --p-ink: #1A1918;
+            --p-body: #5A5957;
+            --p-muted: #8C8882;
+            --p-line: rgba(28, 25, 21, 0.08);
+            --p-bezel: #E2DDD3;
+            --p-shadow: 0 24px 64px rgba(24, 20, 15, 0.10), 0 0 0 1px rgba(28, 25, 21, 0.08);
+
+            width: min(100%, 402px);
+            border-radius: 46px;
+            background: var(--p-bg);
+            box-shadow: var(--p-shadow);
+            overflow: hidden;
+            position: relative;
+            border: 10px solid var(--p-bezel);
+            transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        }
+
+        .phone[data-mode="dark"] {
+            --p-bg: #0B0B0D;
+            --p-ink: #F4F2ED;
+            --p-body: #DFDDD7;
+            --p-muted: #88847C;
+            --p-line: rgba(255, 255, 255, 0.10);
+            --p-bezel: #25252C;
+            --p-shadow: 0 30px 90px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Before/After Slider Stage */
+        .compare-stage {
+            position: relative;
+            --pos: 50%;
+            min-height: 490px;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: pan-y;
+        }
+
+        .compare-layer {
+            width: 100%;
+            min-height: 490px;
+        }
+
+        .compare-layer.layer-raw {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+            -webkit-clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+            pointer-events: none;
+            background: #FFFFFF;
+            color: #111111;
+            --p-bg: #FFFFFF;
+            --p-ink: #000000;
+            --p-body: #111111;
+            --p-muted: #767676;
+            --p-line: rgba(0, 0, 0, 0.12);
+        }
+
+        .phone[data-mode="dark"] .compare-layer.layer-raw {
+            background: #000000;
+            color: #E5E5EA;
+            --p-bg: #000000;
+            --p-ink: #FFFFFF;
+            --p-body: #E5E5EA;
+            --p-muted: #8E8E93;
+            --p-line: rgba(255, 255, 255, 0.14);
+        }
+
+        .compare-layer.layer-raw .screen {
+            padding: 8px 16px 36px;
+            font-size: 14.9px;
+            line-height: 1.52;
+        }
+
+        .compare-layer.layer-raw .p-h1 {
+            font-size: 20px;
+            text-wrap: wrap;
+        }
+
+        .compare-layer.layer-raw .p-body p,
+        .compare-layer.layer-raw .p-body.en p {
+            margin: 0 0 1.0em;
+            letter-spacing: 0;
+        }
+
+        .compare-layer.layer-raw .p-body b,
+        .compare-layer.layer-raw .p-body strong {
+            color: inherit;
+            font-weight: 700;
+            letter-spacing: 0;
+        }
+
+        .raw-gap {
+            display: none;
+        }
+
+        .compare-layer.layer-raw .raw-gap {
+            display: block;
+            margin: 0 0 1.0em;
+        }
+
+        .compare-tag {
+            position: absolute;
+            top: 8px;
+            z-index: 4;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 2px 8px;
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
+        }
+
+        .compare-tag.tag-left {
+            left: 14px;
+            background: rgba(120, 120, 128, 0.16);
+            color: var(--p-muted);
+        }
+
+        .compare-tag.tag-right {
+            right: 14px;
+            background: rgba(24, 94, 194, 0.12);
+            color: var(--accent);
+        }
+
+        .compare-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: var(--pos);
+            width: 2px;
+            background: var(--accent);
+            transform: translateX(-1px);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .compare-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            border-radius: 999px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+        }
+
+        .compare-range {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            opacity: 0;
+            cursor: ew-resize;
+            z-index: 6;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .statusbar {
+            height: 48px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--p-ink);
+            user-select: none;
+            position: relative;
+            z-index: 5;
+        }
+
+        .sb-time {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .island {
+            width: 108px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+        }
+
+        .sb-icons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .sb-icons svg {
+            display: block;
+        }
+
+        /* Phone Article Screen */
+        .screen {
+            padding: 8px 22px 36px;
+            min-height: 480px;
+            background: var(--p-bg);
+            color: var(--p-body);
+            font-size: 16px;
+            line-height: 1.64;
+            text-align: left;
+            transition: background-color 180ms ease, color 180ms ease;
+        }
+
+        .p-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 24px;
+            margin-bottom: 10px;
+        }
+
+        .p-ico {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: #1C1C1E;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .p-feed {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--p-muted);
+        }
+
+        .p-h1 {
+            font-family: var(--font-display);
+            font-size: 21.5px;
+            line-height: 1.32;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            color: var(--p-ink);
+            margin: 0 0 6px;
+            text-align: left;
+            text-wrap: pretty;
+        }
+
+        .p-meta {
+            font-size: 11.5px;
+            color: var(--p-muted);
+            margin-bottom: 12px;
+        }
+
+        .p-div {
+            border: none;
+            border-top: 1px solid var(--p-line);
+            margin: 0 0 14px;
+        }
+
+        .p-body p {
+            text-indent: 0;
+            margin: 0 0 0.35em;
+            letter-spacing: 0.015em;
+        }
+
+        .p-body.en p {
+            margin: 0 0 0.48em;
+        }
+
+        .p-body b,
+        .p-body strong {
+            color: #1D1C1A;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .phone[data-mode="dark"] .layer-pr .p-body [style*="color"] {
+            color: inherit !important;
+        }
+
+        .phone[data-mode="dark"] .layer-pr .p-body b,
+        .phone[data-mode="dark"] .layer-pr .p-body strong {
+            color: #F4F2ED !important;
+        }
+
+        .p-sub {
+            font-weight: 700;
+            color: var(--p-ink);
+            margin: 1.05em 0 0.3em !important;
+            font-size: 16.5px;
+        }
+
+        .case-banner {
+            width: min(100%, 402px);
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--muted);
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .case-banner b {
+            color: var(--ink);
+        }
+
+        /* Advantages & Features Section */
+        section.block {
+            padding: 52px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .sec-kicker {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .sec-title {
+            margin: 0 0 10px;
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+        }
+
+        .sec-sub {
+            margin: 0 0 28px;
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 620px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border-top: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+        }
+
+        @media (max-width: 680px) {
+            .spec-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .spec-cell {
+            padding: 24px 26px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .spec-num {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .spec-cell h3 {
+            margin: 0 0 8px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .spec-cell p {
+            margin: 0;
+            font-size: 13.8px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            margin-top: 26px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        @media (max-width: 640px) {
+            .metrics-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric {
+            padding: 16px 18px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .metric .k {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .metric .v {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Install Section */
+        .install-cols {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 720px) {
+            .install-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .install-box {
+            padding: 24px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+
+        .install-box h3 {
+            margin: 0 0 10px;
+            font-size: 16.5px;
+            color: var(--ink);
+        }
+
+        .install-box p,
+        .install-box li {
+            font-size: 13.8px;
+            color: var(--muted);
+            line-height: 1.72;
+        }
+
+        .install-box ol {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .install-box li {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 11px 20px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: transform 120ms ease, opacity 120ms ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-pri {
+            background: var(--accent);
+            color: var(--accent-ink);
+        }
+
+        .btn-sec {
+            background: var(--card);
+            color: var(--ink);
+            border-color: var(--line-strong);
+        }
+
+        footer {
+            padding: 32px 0 48px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12.5px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="topbar">
+            <div class="brand">
+                <span>PocketRead</span>
+                <span class="brand-ver">v1.0</span>
+            </div>
+            <div class="topbar-right">
+                <div class="nav-links">
+                    <a href="#showcase">Preview</a>
+                    <a href="#details">Details</a>
+                    <a href="#install">Install</a>
+                </div>
+                <a href="./" style="font-size:13px;font-weight:600;color:var(--muted);padding:3px 9px;border:1px solid var(--line-strong);border-radius:999px;">中文</a>
+            </div>
+        </nav>
+
+        <header class="hero" id="showcase">
+            <div class="kicker">NetNewsWire Theme · CJK &amp; English</div>
+            <h1>A clean, compact <br>CJK &amp; English theme for NetNewsWire</h1>
+            <p class="lead">
+                Slightly larger type scale, tighter paragraph spacing, Semibold 600 emphasis, and lightweight cleanup for extra blank lines and dark inline styles in CJK feeds. Works on iPhone, iPad, and Mac — tested on iPhone; feedback and PRs for other devices are welcome.
+            </p>
+
+            <div class="controls">
+                <div class="pill-group" id="tabs">
+                    <button class="active" onclick="switchCase('english')">English</button>
+                    <button onclick="switchCase('finance')">CJK Brief</button>
+                    <button onclick="switchCase('feature')">Long Read</button>
+                    <button onclick="switchCase('investigation')">Dark Fix</button>
+                </div>
+                <div class="theme-switch" role="group" aria-label="Toggle preview appearance">
+                    <button id="t-light" class="active" onclick="setMode('light')">Paper</button>
+                    <button id="t-dark" onclick="setMode('dark')">Dark</button>
+                </div>
+            </div>
+
+            <div class="stage-wrap">
+                <div class="phone" id="phone-preview">
+                    <div class="statusbar" aria-hidden="true">
+                        <span class="sb-time">9:41</span>
+                        <div class="island"></div>
+                        <div class="sb-icons">
+                            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor">
+                                <rect x="0" y="7" width="2.6" height="4" rx="0.8" />
+                                <rect x="4.2" y="5" width="2.6" height="6" rx="0.8" />
+                                <rect x="8.4" y="2.5" width="2.6" height="8.5" rx="0.8" />
+                                <rect x="12.6" y="0" width="2.6" height="11" rx="0.8" />
+                            </svg>
+                            <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round">
+                                <path d="M1.2 3.8a9.2 9.2 0 0 1 12.6 0" />
+                                <path d="M3.6 6.4a5.8 5.8 0 0 1 7.8 0" />
+                                <circle cx="7.5" cy="9.4" r="1.1" fill="currentColor" stroke="none" />
+                            </svg>
+                            <svg width="24" height="11" viewBox="0 0 24 11" fill="none">
+                                <rect x="0.75" y="0.75" width="19.5" height="9.5" rx="2.6" stroke="currentColor"
+                                    stroke-opacity="0.45" stroke-width="1.2" />
+                                <rect x="2.4" y="2.4" width="16.2" height="6.2" rx="1.4" fill="currentColor" />
+                                <path d="M21.6 3.7v3.6a1.4 1.4 0 0 0 0-3.6Z" fill="currentColor" fill-opacity="0.45" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="compare-stage" id="compare-stage">
+                        <div class="compare-layer layer-pr">
+                            <span class="compare-tag tag-right">PocketRead</span>
+                            <div class="screen" id="article-screen-pr" style="padding-top: 34px;"></div>
+                        </div>
+                        <div class="compare-layer layer-raw" aria-hidden="true">
+                            <span class="compare-tag tag-left">Default</span>
+                            <div class="screen" id="article-screen-raw" style="padding-top: 34px;"></div>
+                        </div>
+                        <div class="compare-divider" aria-hidden="true">
+                            <div class="compare-handle">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" />
+                                </svg>
+                            </div>
+                        </div>
+                        <input class="compare-range" id="compare-range" type="range" min="0" max="100" value="50"
+                            aria-label="Drag to compare default RSS styling and PocketRead"
+                            oninput="setCompare(this.value)" />
+                    </div>
+                </div>
+
+                <div class="case-banner" id="case-note">
+                    <!-- Dynamic feature note injected via JS -->
+                </div>
+            </div>
+        </header>
+
+        <section class="block" id="details">
+            <div class="sec-kicker">TYPOGRAPHY &amp; DETAILS</div>
+            <h2 class="sec-title">What changed</h2>
+            <p class="sec-sub">Six small adjustments aimed at common friction in daily bilingual RSS reading.</p>
+
+            <div class="spec-grid">
+                <div class="spec-cell">
+                    <div class="spec-num">01 / PARAGRAPH RHYTHM</div>
+                    <h3>Flush-left, tighter paragraphs</h3>
+                    <p>No first-line CJK indentation. Short news briefs often run 2–3 lines per paragraph, where repeated indents feel choppy. Flush-left alignment with <code>0.35em</code> CJK spacing keeps scanning steady.</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">02 / FONT SCALE</div>
+                    <h3>1.07x dynamic type scale</h3>
+                    <p>Scales NetNewsWire's <code>[[font-size]]</code> by 1.07x (~<code>18.2px</code> at default) with <code>22px</code> horizontal padding, while still honoring system Dynamic Type.</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">03 / FONT WEIGHT</div>
+                    <h3>Semibold 600 for bold text</h3>
+                    <p>Default 700 bold can look heavy in PingFang SC body copy. Setting <code>&lt;b&gt;</code> and <code>&lt;strong&gt;</code> to 600 with slightly darker ink keeps emphasis readable without visual weight.</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">04 / COLOR &amp; DARK MODE</div>
+                    <h3>Warm paper &amp; dark mode cleanup</h3>
+                    <p>Light mode pairs warm paper <code>#FAF8F4</code> with charcoal text <code>#5A5957</code>; dark mode uses <code>#0B0B0D</code> with soft white <code>#DFDDD7</code>, overriding hardcoded dark inline colors (such as <code>#333</code>) from feeds.</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">05 / HTML CLEANUP</div>
+                    <h3>Empty-line cleanup for CJK feeds</h3>
+                    <p>Collapses empty paragraphs, repeated <code>&lt;br&gt;</code> spacers, and empty wrapper nodes common in Chinese RSS feeds, and normalizes <code>.article-paragraph</code> blocks.</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">06 / ENGLISH</div>
+                    <h3>English spacing &amp; heading wrap</h3>
+                    <p>English body copy uses <code>0.48em</code> paragraph spacing. Headings stay left-aligned with <code>text-wrap: pretty</code> to reduce orphan words on the final line.</p>
+                </div>
+            </div>
+
+            <div class="metrics-bar">
+                <div class="metric">
+                    <div class="k">Base Font Size</div>
+                    <div class="v">18.2px (×1.07)</div>
+                </div>
+                <div class="metric">
+                    <div class="k">CJK Indent / Gap</div>
+                    <div class="v">0 / 0.35em</div>
+                </div>
+                <div class="metric">
+                    <div class="k">Bold Weight</div>
+                    <div class="v">Semibold 600</div>
+                </div>
+                <div class="metric">
+                    <div class="k">Line Height / Pad</div>
+                    <div class="v">1.64 / 22px</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="install">
+            <div class="sec-kicker">INSTALLATION</div>
+            <h2 class="sec-title">Installation</h2>
+            <p class="sec-sub">Works on iPhone, iPad, and Mac. Open directly in NetNewsWire or download the archive to import manually.</p>
+
+            <div class="install-cols">
+                <div class="install-box">
+                    <h3>Direct install</h3>
+                    <p>On a device with NetNewsWire installed, tap below to import directly:</p>
+                    <div style="margin: 16px 0;">
+                        <a class="btn btn-pri" id="btn-nnw" href="netnewswire://theme/add?url=https%3A%2F%2Fgithub.com%2Ffishyo%2Fpocketread-nnw-theme%2Freleases%2Fdownload%2Fv1.0.0%2FPocketRead.nnwtheme.zip">Open in NetNewsWire</a>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a class="btn btn-sec" href="https://github.com/fishyo/pocketread-nnw-theme/releases/download/v1.0.0/PocketRead.nnwtheme.zip" download>Download theme (.zip)</a>
+                    </div>
+                </div>
+
+                <div class="install-box">
+                    <h3>Manual install</h3>
+                    <ol>
+                        <li>Download <code>PocketRead.nnwtheme.zip</code> to Files or Downloads.</li>
+                        <li>Unzip to get the <code>PocketRead.nnwtheme</code> folder.</li>
+                        <li>On iOS/iPadOS, share it to NetNewsWire; on macOS, double-click to install.</li>
+                        <li>Select <strong>PocketRead</strong> under NetNewsWire Settings ➔ <strong>Article Theme</strong>.</li>
+                    </ol>
+                    <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">
+                        * If upgrading from an older copy, choose <strong>Overwrite</strong> when prompted.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div>PocketRead v1.0 · CJK &amp; English theme for NetNewsWire</div>
+            <div>MIT License · <a href="https://github.com/fishyo/pocketread-nnw-theme" target="_blank" rel="noopener">GitHub</a></div>
+        </footer>
+    </div>
+
+    <script>
+        const CASES = {
+            finance: {
+                note: '<b>CJK Brief:</b> Flush-left alignment with 0.35em paragraph spacing and Semibold 600 for numbers and key terms.',
+                feed: '晚点财经 · 格隆汇精选',
+                ico: '财',
+                title: 'Anthropic 的 IPO，让最早下注的亚马逊和谷歌拿到了巨额账面回报。',
+                meta: 'Nov 22, 2026 at 16:28 · 晚点团队',
+                html: `
+        <p>此次 IPO 公开发行募资 <strong>813 亿美元</strong>，超过 SpaceX 今夏创下的 750 亿美元纪录。</p>
+        <p>周五，承销商全额行使超额配售权，额外买入 1.47 亿股，使 IPO 募资总额升至约 <strong>935 亿美元</strong>。</p>
+        <p>按周五收盘价 <strong>88.91 美元</strong>计算，亚马逊手里的约 19.4 亿股价值约 <strong>1720 亿美元</strong>，谷歌持有的约 17.7 亿股价值约 <strong>1580 亿美元</strong>。</p>
+        <p class="p-sub">利益绑定的算力循环</p>
+        <p>两家合计约 <strong>3300 亿美元</strong>。持股比例上，亚马逊约 14.6%，谷歌约 13.4%，加起来 28%。这场创纪录 IPO 中，没有谁的账面回报比它们更高。</p>
+        <p>钱投出去，又以算力采购的形式流回来。意味着两家巨头比普通股东多了一层利益：它们不仅关心股价，也关心 <strong>Anthropic</strong> 能不能持续支付算力账单。</p>
+      `
+            },
+            feature: {
+                note: '<b>Long Read:</b> Collapses empty spacer paragraphs from the feed; subheadings use 1.05em / 0.3em margins with charcoal #5A5957 body text.',
+                feed: '晚点 LatePost',
+                ico: '晚',
+                title: '药明康德的退路与生路',
+                meta: '晚点团队 · 2026年11月21日 14:30',
+                html: `
+        <p>11 月的无锡已有了初冬的寒意，太湖边的药明康德研发中心大楼依然彻夜通明。</p>
+        <p class="raw-gap"><br /></p>
+        <p>过去这一年，全球生物医药融资节奏明显放缓。在资本退潮与地缘博弈的双重夹击下，国内 CXO 行业正在经历一次漫长而剧烈的估值重构。</p>
+        <p class="raw-gap"><br /></p>
+        <p class="p-sub">漏斗里的竞赛</p>
+        <p>核心商业模式是将药物发现、工艺开发与商业化生产整合在同一体系内。对药明康德来说，这不仅是一场效率战，更是一场对抗地缘不确定性的防御战。</p>
+        <p>一位接近药明高层的人士透露：“我们目前在新加坡与美国特拉华州的海外产能扩建都在按既定节奏推进。”</p>
+      `
+            },
+            investigation: {
+                note: '<b>Dark Mode Fix:</b> Overrides hardcoded dark inline colors (like #666) from feeds so warnings stay legible on dark backgrounds.',
+                feed: 'BBC 中文网',
+                ico: 'B',
+                title: '宠物火化真相调查：逝去爱犬的最后告别',
+                meta: 'BBC 中文特写 · Nov 22, 2026 at 17:16',
+                html: `
+        <p>得知发现爱犬尸体的消息后，柯玲女士悲痛欲绝，她想知道自己的宠物是否真的被火化。</p>
+        <p style="color: #666666;"><strong>警告：本文包含部分读者可能感到不适的图片及文字叙述。</strong></p>
+        <p>自从这段影片在社交媒体上流传后，动物救援组织在马尼拉郊区发现多处弃置点，总共挖出约 170 只死亡宠物的遗骸。</p>
+        <p>这些动物原本被送去火化业者，主人预期它们会被烧成骨灰。如今，许多悲痛的主人必须面对令人心碎的现实：心爱的宠物可能并没有得到他们付费购买的体面送行。</p>
+      `
+            },
+            english: {
+                note: '<b>English:</b> 0.48em paragraph spacing, 1.64 line height, and text-wrap: pretty on left-aligned headings.',
+                feed: 'The Guardian',
+                ico: 'G',
+                title: 'China is pushing for rapid electrification using low-carbon energy',
+                meta: 'Nov 22, 2026 at 16:27 · Environment Desk',
+                html: `
+        <div class="p-body en">
+          <p>China is pushing for rapid electrification of its economy using low-carbon energy and will help other countries do the same, a senior member of the Chinese delegation at the Cop31 UN climate summit has said.</p>
+          <p>Wang Yi, a professor of energy and environment policy at the Chinese Academy of Sciences and a senior adviser to the government, said: <strong>“End-use electrification is a very clear direction.”</strong></p>
+          <p>We can follow this direction while making the source of electricity clean. That’s the way to go forward, balancing grid reliability and renewable generation targets.</p>
+        </div>
+      `
+            }
+        };
+
+        let activeCase = 'english';
+
+        function renderArticle() {
+            const data = CASES[activeCase];
+            const markup = `
+      <div class="p-bar"><div class="p-ico">${data.ico}</div><div class="p-feed">${data.feed}</div></div>
+      <div class="p-h1">${data.title}</div>
+      <div class="p-meta">${data.meta}</div>
+      <hr class="p-div" />
+      <div class="p-body ${activeCase === 'english' ? 'en' : 'cjk'}">
+        ${data.html}
+      </div>
+    `;
+            document.getElementById('article-screen-pr').innerHTML = markup;
+            document.getElementById('article-screen-raw').innerHTML = markup;
+            document.getElementById('case-note').innerHTML = data.note;
+        }
+
+        function setCompare(val) {
+            document.getElementById('compare-stage').style.setProperty('--pos', val + '%');
+        }
+
+        function switchCase(key) {
+            activeCase = key;
+            const btns = document.querySelectorAll('#tabs button');
+            const keys = ['english', 'finance', 'feature', 'investigation'];
+            btns.forEach((btn, idx) => {
+                btn.classList.toggle('active', keys[idx] === key);
+            });
+            renderArticle();
+        }
+
+        function setMode(mode) {
+            const phone = document.getElementById('phone-preview');
+            if (mode === 'dark') {
+                phone.setAttribute('data-mode', 'dark');
+                document.getElementById('t-dark').classList.add('active');
+                document.getElementById('t-light').classList.remove('active');
+            } else {
+                phone.removeAttribute('data-mode');
+                document.getElementById('t-light').classList.add('active');
+                document.getElementById('t-dark').classList.remove('active');
+            }
+        }
+
+        // Initial render
+        renderArticle();
+    </script>
+</body>
+
+</html>

@@ -4,7 +4,7 @@
 
 ![PocketRead Preview](screenshots/theme-preview.png)
 
-- **在线预览**：[https://fishyo.github.io/pocketread-nnw-theme/](https://fishyo.github.io/pocketread-nnw-theme/)
+- **在线预览**：[中文](https://fishyo.github.io/pocketread-nnw-theme/) / [English](https://fishyo.github.io/pocketread-nnw-theme/en.html)
 - **一键安装**：[在 NetNewsWire 中打开](https://fishyo.github.io/pocketread-nnw-theme/install.html)
 - **直接下载**：[PocketRead.nnwtheme.zip (v1.0)](https://github.com/fishyo/pocketread-nnw-theme/releases/download/v1.0.0/PocketRead.nnwtheme.zip)
 
