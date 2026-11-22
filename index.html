@@ -281,8 +281,31 @@
             --p-shadow: 0 30px 90px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
         }
 
-        /* Realistic NetNewsWire Default RSS comparison */
-        .phone[data-style="default"] {
+        /* Before/After Slider Stage */
+        .compare-stage {
+            position: relative;
+            --pos: 50%;
+            min-height: 490px;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: pan-y;
+        }
+
+        .compare-layer {
+            width: 100%;
+            min-height: 490px;
+        }
+
+        .compare-layer.layer-raw {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+            -webkit-clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+            pointer-events: none;
+            background: #FFFFFF;
+            color: #111111;
             --p-bg: #FFFFFF;
             --p-ink: #000000;
             --p-body: #111111;
@@ -290,7 +313,9 @@
             --p-line: rgba(0, 0, 0, 0.12);
         }
 
-        .phone[data-style="default"][data-mode="dark"] {
+        .phone[data-mode="dark"] .compare-layer.layer-raw {
+            background: #000000;
+            color: #E5E5EA;
             --p-bg: #000000;
             --p-ink: #FFFFFF;
             --p-body: #E5E5EA;
@@ -298,42 +323,104 @@
             --p-line: rgba(255, 255, 255, 0.14);
         }
 
-        .phone[data-style="default"] .screen {
+        .compare-layer.layer-raw .screen {
             padding: 8px 16px 36px;
             font-size: 14.9px;
             line-height: 1.52;
         }
 
-        .phone[data-style="default"] .p-h1 {
+        .compare-layer.layer-raw .p-h1 {
             font-size: 20px;
             text-wrap: wrap;
         }
 
-        .phone[data-style="default"] .p-body p,
-        .phone[data-style="default"] .p-body.en p {
+        .compare-layer.layer-raw .p-body p,
+        .compare-layer.layer-raw .p-body.en p {
             margin: 0 0 1.0em;
             letter-spacing: 0;
         }
 
-        .phone[data-style="default"] .p-body b,
-        .phone[data-style="default"] .p-body strong {
+        .compare-layer.layer-raw .p-body b,
+        .compare-layer.layer-raw .p-body strong {
             color: inherit;
             font-weight: 700;
             letter-spacing: 0;
-        }
-
-        .phone[data-style="default"][data-mode="dark"] .p-body b,
-        .phone[data-style="default"][data-mode="dark"] .p-body strong {
-            color: inherit !important;
         }
 
         .raw-gap {
             display: none;
         }
 
-        .phone[data-style="default"] .raw-gap {
+        .compare-layer.layer-raw .raw-gap {
             display: block;
             margin: 0 0 1.0em;
+        }
+
+        .compare-tag {
+            position: absolute;
+            top: 8px;
+            z-index: 4;
+            font-size: 10.5px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            padding: 2px 8px;
+            border-radius: 999px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            pointer-events: none;
+        }
+
+        .compare-tag.tag-left {
+            left: 14px;
+            background: rgba(120, 120, 128, 0.16);
+            color: var(--p-muted);
+        }
+
+        .compare-tag.tag-right {
+            right: 14px;
+            background: rgba(24, 94, 194, 0.12);
+            color: var(--accent);
+        }
+
+        .compare-divider {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: var(--pos);
+            width: 2px;
+            background: var(--accent);
+            transform: translateX(-1px);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .compare-handle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            border-radius: 999px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+        }
+
+        .compare-range {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            opacity: 0;
+            cursor: ew-resize;
+            z-index: 6;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .statusbar {
@@ -452,12 +539,12 @@
             letter-spacing: 0.01em;
         }
 
-        .phone[data-mode="dark"]:not([data-style="default"]) .p-body [style*="color"] {
+        .phone[data-mode="dark"] .layer-pr .p-body [style*="color"] {
             color: inherit !important;
         }
 
-        .phone[data-mode="dark"]:not([data-style="default"]) .p-body b,
-        .phone[data-mode="dark"]:not([data-style="default"]) .p-body strong {
+        .phone[data-mode="dark"] .layer-pr .p-body b,
+        .phone[data-mode="dark"] .layer-pr .p-body strong {
             color: #F4F2ED !important;
         }
 
@@ -707,10 +794,6 @@
                     <button onclick="switchCase('investigation')">特写调查</button>
                     <button onclick="switchCase('english')">英文原版</button>
                 </div>
-                <div class="theme-switch" role="group" aria-label="对比主题与原 RSS 默认样式">
-                    <button id="s-pocket" class="active" onclick="setStyle('pocketread')">PocketRead</button>
-                    <button id="s-default" onclick="setStyle('default')">原 RSS</button>
-                </div>
                 <div class="theme-switch" role="group" aria-label="切换预览明暗模式">
                     <button id="t-light" class="active" onclick="setMode('light')">暖纸</button>
                     <button id="t-dark" onclick="setMode('dark')">深黑</button>
@@ -744,8 +827,25 @@
                         </div>
                     </div>
 
-                    <div class="screen" id="article-screen">
-                        <!-- Dynamic article content injected via JS -->
+                    <div class="compare-stage" id="compare-stage">
+                        <div class="compare-layer layer-pr">
+                            <span class="compare-tag tag-right">PocketRead</span>
+                            <div class="screen" id="article-screen-pr" style="padding-top: 34px;"></div>
+                        </div>
+                        <div class="compare-layer layer-raw" aria-hidden="true">
+                            <span class="compare-tag tag-left">原 RSS</span>
+                            <div class="screen" id="article-screen-raw" style="padding-top: 34px;"></div>
+                        </div>
+                        <div class="compare-divider" aria-hidden="true">
+                            <div class="compare-handle">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M5.5 4.5 2 8l3.5 3.5M10.5 4.5 14 8l-3.5 3.5" />
+                                </svg>
+                            </div>
+                        </div>
+                        <input class="compare-range" id="compare-range" type="range" min="0" max="100" value="50"
+                            aria-label="左右拖动对比原 RSS 与 PocketRead 排版效果"
+                            oninput="setCompare(this.value)" />
                     </div>
                 </div>
 
@@ -924,10 +1024,7 @@
 
         function renderArticle() {
             const data = CASES[activeCase];
-            const screen = document.getElementById('article-screen');
-            const note = document.getElementById('case-note');
-
-            screen.innerHTML = `
+            const markup = `
       <div class="p-bar"><div class="p-ico">${data.ico}</div><div class="p-feed">${data.feed}</div></div>
       <div class="p-h1">${data.title}</div>
       <div class="p-meta">${data.meta}</div>
@@ -936,8 +1033,13 @@
         ${data.html}
       </div>
     `;
+            document.getElementById('article-screen-pr').innerHTML = markup;
+            document.getElementById('article-screen-raw').innerHTML = markup;
+            document.getElementById('case-note').innerHTML = data.note;
+        }
 
-            note.innerHTML = data.note;
+        function setCompare(val) {
+            document.getElementById('compare-stage').style.setProperty('--pos', val + '%');
         }
 
         function switchCase(key) {
@@ -948,19 +1050,6 @@
                 btn.classList.toggle('active', keys[idx] === key);
             });
             renderArticle();
-        }
-
-        function setStyle(style) {
-            const phone = document.getElementById('phone-preview');
-            if (style === 'default') {
-                phone.setAttribute('data-style', 'default');
-                document.getElementById('s-default').classList.add('active');
-                document.getElementById('s-pocket').classList.remove('active');
-            } else {
-                phone.removeAttribute('data-style');
-                document.getElementById('s-pocket').classList.add('active');
-                document.getElementById('s-default').classList.remove('active');
-            }
         }
 
         function setMode(mode) {
