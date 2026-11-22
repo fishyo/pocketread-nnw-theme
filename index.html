@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PocketRead — NetNewsWire 中英文阅读主题</title>
+    <meta name="description"
+        content="一款 NetNewsWire 中英文阅读主题：1.07x 动态字号、顶格紧凑段距、Semibold 600 粗体、暖纸与深黑配色，清理常见源站多余空行与暗色内联样式。" />
+    <style>
+        :root {
+            color-scheme: light dark;
+            --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Text", "Hiragino Sans GB", sans-serif;
+            --font-display: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Display", "Hiragino Sans GB", sans-serif;
+            --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+            /* PocketRead Warm Paper Light Palette (matches stylesheet.css) */
+            --bg: #FAF8F4;
+            --bg-glow: rgba(24, 94, 194, 0.055);
+            --surface: #F2EEE6;
+            --card: #FFFFFF;
+            --ink: #1A1918;
+            --body: #5A5957;
+            --muted: #8C8882;
+            --line: rgba(28, 25, 21, 0.08);
+            --line-strong: rgba(28, 25, 21, 0.16);
+            --accent: #185EC2;
+            --accent-ink: #FFFFFF;
+            --bezel: #E2DDD3;
+            --phone-bg: #FAF8F4;
+            --phone-shadow: 0 24px 64px rgba(24, 20, 15, 0.10), 0 0 0 1px rgba(28, 25, 21, 0.08);
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            /* PocketRead OLED Dark Palette (matches stylesheet.css) */
+            --bg: #0B0B0D;
+            --bg-glow: rgba(105, 167, 255, 0.06);
+            --surface: #17171C;
+            --card: #1D1D23;
+            --ink: #F4F2ED;
+            --body: #DFDDD7;
+            --muted: #88847C;
+            --line: rgba(255, 255, 255, 0.10);
+            --line-strong: rgba(255, 255, 255, 0.18);
+            --accent: #69A7FF;
+            --accent-ink: #0B0B0D;
+            --bezel: #25252C;
+            --phone-bg: #0B0B0D;
+            --phone-shadow: 0 30px 90px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            background: var(--bg);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(760px 440px at 50% 120px, var(--bg-glow), transparent 70%), var(--bg);
+            color: var(--body);
+            font-family: var(--font-sans);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.64;
+            transition: background-color 180ms ease, color 180ms ease;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 0.86em;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: var(--surface);
+            color: var(--ink);
+        }
+
+        .container {
+            width: min(100%, 860px);
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 18px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--ink);
+            letter-spacing: -0.01em;
+        }
+
+        .brand-ver {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted);
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--line-strong);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            font-size: 13.5px;
+        }
+
+        .nav-links a {
+            color: var(--muted);
+            transition: color 120ms ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--ink);
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                display: none;
+            }
+        }
+
+        .theme-switch {
+            display: inline-flex;
+            padding: 3px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+
+        .theme-switch button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 140ms ease, color 140ms ease;
+        }
+
+        .theme-switch button.active {
+            background: var(--ink);
+            color: var(--bg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 44px 0 36px;
+            text-align: center;
+        }
+
+        .kicker {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .hero h1 {
+            margin: 0 auto 14px;
+            max-width: 660px;
+            font-family: var(--font-display);
+            font-size: clamp(28px, 5.2vw, 44px);
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+        }
+
+        .hero .lead {
+            margin: 0 auto 28px;
+            max-width: 580px;
+            font-size: 15.5px;
+            line-height: 1.72;
+            color: var(--muted);
+        }
+
+        /* Case Switcher Tabs */
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .pill-group {
+            display: inline-flex;
+            padding: 4px;
+            border-radius: 999px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .pill-group button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 140ms ease, color 140ms ease;
+        }
+
+        .pill-group button.active {
+            background: var(--card);
+            color: var(--ink);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Phone Mockup Showcase */
+        .stage-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .phone {
+            width: min(100%, 402px);
+            border-radius: 46px;
+            background: var(--phone-bg);
+            box-shadow: var(--phone-shadow);
+            overflow: hidden;
+            position: relative;
+            border: 10px solid var(--bezel);
+            transition: background-color 180ms ease, border-color 180ms ease;
+        }
+
+        .statusbar {
+            height: 48px;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            padding: 0 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            user-select: none;
+            position: relative;
+            z-index: 5;
+        }
+
+        .sb-time {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .island {
+            width: 108px;
+            height: 28px;
+            background: #000;
+            border-radius: 20px;
+        }
+
+        .sb-icons {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 6px;
+        }
+
+        .sb-icons svg {
+            display: block;
+        }
+
+        /* Phone Article Screen */
+        .screen {
+            padding: 8px 22px 36px;
+            min-height: 480px;
+            background: var(--phone-bg);
+            color: var(--body);
+            font-size: 16px;
+            line-height: 1.64;
+            text-align: left;
+            transition: background-color 180ms ease, color 180ms ease;
+        }
+
+        .p-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 24px;
+            margin-bottom: 10px;
+        }
+
+        .p-ico {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: #1C1C1E;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .p-feed {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        .p-h1 {
+            font-family: var(--font-display);
+            font-size: 21.5px;
+            line-height: 1.32;
+            font-weight: 700;
+            letter-spacing: -0.015em;
+            color: var(--ink);
+            margin: 0 0 6px;
+            text-align: left;
+            text-wrap: pretty;
+        }
+
+        .p-meta {
+            font-size: 11.5px;
+            color: var(--muted);
+            margin-bottom: 12px;
+        }
+
+        .p-div {
+            border: none;
+            border-top: 1px solid var(--line);
+            margin: 0 0 14px;
+        }
+
+        .p-body p {
+            text-indent: 0;
+            margin: 0 0 0.35em;
+            letter-spacing: 0.015em;
+        }
+
+        .p-body.en p {
+            margin: 0 0 0.48em;
+        }
+
+        .p-body b,
+        .p-body strong {
+            color: #1D1C1A;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        html[data-theme="dark"] .p-body b,
+        html[data-theme="dark"] .p-body strong {
+            color: #F4F2ED !important;
+        }
+
+        .p-sub {
+            font-weight: 700;
+            color: var(--ink);
+            margin: 1.05em 0 0.3em !important;
+            font-size: 16.5px;
+        }
+
+        .case-banner {
+            width: min(100%, 402px);
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--muted);
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        .case-banner b {
+            color: var(--ink);
+        }
+
+        /* Advantages & Features Section */
+        section.block {
+            padding: 52px 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .sec-kicker {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .sec-title {
+            margin: 0 0 10px;
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+        }
+
+        .sec-sub {
+            margin: 0 0 28px;
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 620px;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            border-top: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+        }
+
+        @media (max-width: 680px) {
+            .spec-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .spec-cell {
+            padding: 24px 26px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .spec-num {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .spec-cell h3 {
+            margin: 0 0 8px;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .spec-cell p {
+            margin: 0;
+            font-size: 13.8px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        .metrics-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            margin-top: 26px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: var(--surface);
+            overflow: hidden;
+        }
+
+        @media (max-width: 640px) {
+            .metrics-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .metric {
+            padding: 16px 18px;
+            border-right: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .metric .k {
+            font-size: 12px;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .metric .v {
+            font-family: var(--font-mono);
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--ink);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Install Section */
+        .install-cols {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 18px;
+        }
+
+        @media (max-width: 720px) {
+            .install-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .install-box {
+            padding: 24px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+        }
+
+        .install-box h3 {
+            margin: 0 0 10px;
+            font-size: 16.5px;
+            color: var(--ink);
+        }
+
+        .install-box p,
+        .install-box li {
+            font-size: 13.8px;
+            color: var(--muted);
+            line-height: 1.72;
+        }
+
+        .install-box ol {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+        .install-box li {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 11px 20px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: transform 120ms ease, opacity 120ms ease;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-pri {
+            background: var(--accent);
+            color: var(--accent-ink);
+        }
+
+        .btn-sec {
+            background: var(--card);
+            color: var(--ink);
+            border-color: var(--line-strong);
+        }
+
+        footer {
+            padding: 32px 0 48px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px;
+            font-size: 12.5px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="topbar">
+            <div class="brand">
+                <span>PocketRead</span>
+                <span class="brand-ver">v1.0</span>
+            </div>
+            <div class="topbar-right">
+                <div class="nav-links">
+                    <a href="#showcase">预览</a>
+                    <a href="#details">排版细节</a>
+                    <a href="#install">安装</a>
+                </div>
+                <div class="theme-switch" role="group" aria-label="切换明暗模式">
+                    <button id="t-light" class="active" onclick="setMode('light')">暖纸</button>
+                    <button id="t-dark" onclick="setMode('dark')">深黑</button>
+                </div>
+            </div>
+        </nav>
+
+        <header class="hero" id="showcase">
+            <div class="kicker">NetNewsWire Theme · CJK &amp; English</div>
+            <h1>干净紧凑的 <br>NetNewsWire 中英文阅读主题</h1>
+            <p class="lead">
+                微调基准字号，收紧段落间距，将正文粗体降为 Semibold 600，清理常见中文源站的多余空行和暗色内联样式。支持 iPhone、iPad 与
+                Mac。已在 iPhone 上测试，其他设备欢迎反馈问题或提交 PR。
+            </p>
+
+            <div class="controls">
+                <div class="pill-group" id="tabs">
+                    <button class="active" onclick="switchCase('finance')">商业快讯</button>
+                    <button onclick="switchCase('feature')">深度报道</button>
+                    <button onclick="switchCase('investigation')">特写调查</button>
+                    <button onclick="switchCase('english')">英文原版</button>
+                </div>
+            </div>
+
+            <div class="stage-wrap">
+                <div class="phone">
+                    <div class="statusbar" aria-hidden="true">
+                        <span class="sb-time">9:41</span>
+                        <div class="island"></div>
+                        <div class="sb-icons">
+                            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor">
+                                <rect x="0" y="7" width="2.6" height="4" rx="0.8" />
+                                <rect x="4.2" y="5" width="2.6" height="6" rx="0.8" />
+                                <rect x="8.4" y="2.5" width="2.6" height="8.5" rx="0.8" />
+                                <rect x="12.6" y="0" width="2.6" height="11" rx="0.8" />
+                            </svg>
+                            <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor"
+                                stroke-width="1.5" stroke-linecap="round">
+                                <path d="M1.2 3.8a9.2 9.2 0 0 1 12.6 0" />
+                                <path d="M3.6 6.4a5.8 5.8 0 0 1 7.8 0" />
+                                <circle cx="7.5" cy="9.4" r="1.1" fill="currentColor" stroke="none" />
+                            </svg>
+                            <svg width="24" height="11" viewBox="0 0 24 11" fill="none">
+                                <rect x="0.75" y="0.75" width="19.5" height="9.5" rx="2.6" stroke="currentColor"
+                                    stroke-opacity="0.45" stroke-width="1.2" />
+                                <rect x="2.4" y="2.4" width="16.2" height="6.2" rx="1.4" fill="currentColor" />
+                                <path d="M21.6 3.7v3.6a1.4 1.4 0 0 0 0-3.6Z" fill="currentColor" fill-opacity="0.45" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="screen" id="article-screen">
+                        <!-- Dynamic article content injected via JS -->
+                    </div>
+                </div>
+
+                <div class="case-banner" id="case-note">
+                    <!-- Dynamic feature note injected via JS -->
+                </div>
+            </div>
+        </header>
+
+        <section class="block" id="details">
+            <div class="sec-kicker">TYPOGRAPHY &amp; DETAILS</div>
+            <h2 class="sec-title">做了哪些调整</h2>
+            <p class="sec-sub">围绕日常阅读中常遇到的几处小问题，做了六项克制的样式调整。</p>
+
+            <div class="spec-grid">
+                <div class="spec-cell">
+                    <div class="spec-num">01 / PARAGRAPH RHYTHM</div>
+                    <h3>顶格对齐，收紧段距</h3>
+                    <p>不做首行两字缩进。短快讯每段往往只有两三行，频繁缩进容易打断视线；统一顶格左对齐，中文段距设为 <code>0.35em</code>，版面更紧凑。</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">02 / FONT SCALE</div>
+                    <h3>基准字号微调至 1.07x</h3>
+                    <p>在 NetNewsWire 传入的 <code>[[font-size]]</code> 上按 1.07 倍微调（默认约 <code>18.2px</code>），左右留白
+                        <code>22px</code>，仍随系统动态字体缩放。
+                    </p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">03 / FONT WEIGHT</div>
+                    <h3>正文粗体改用 Semibold 600</h3>
+                    <p>苹方默认的 700 粗体在正文里偏厚。把 <code>&lt;b&gt;</code> 和 <code>&lt;strong&gt;</code> 调为 600
+                        半粗体，配合略深一阶的炭黑色，区分重点而不刺眼。
+                    </p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">04 / COLOR &amp; DARK MODE</div>
+                    <h3>暖纸与深黑配色，修正暗色隐形字</h3>
+                    <p>浅色用暖纸底 <code>#FAF8F4</code> 配炭灰字 <code>#5A5957</code>，深色用 <code>#0B0B0D</code> 配柔白
+                        <code>#DFDDD7</code>。同时覆盖源站写死的暗色内联样式（如 <code>#333</code>），避免深色模式下字迹发暗。
+                    </p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">05 / HTML CLEANUP</div>
+                    <h3>清理常见源站的多余空行</h3>
+                    <p>针对部分中文 RSS 源里的空段落、连续 <code>&lt;br&gt;</code> 与空占位容器做轻量折叠，并兼容 <code>.article-paragraph</code>
+                        等非标段落结构。</p>
+                </div>
+                <div class="spec-cell">
+                    <div class="spec-num">06 / ENGLISH</div>
+                    <h3>英文段距与标题折行</h3>
+                    <p>英文正文段距设为 <code>0.48em</code>；标题保持左对齐并启用 <code>text-wrap: pretty</code>，减少末行只剩一个单词的情况。</p>
+                </div>
+            </div>
+
+            <div class="metrics-bar">
+                <div class="metric">
+                    <div class="k">正文字号基准</div>
+                    <div class="v">18.2px (×1.07)</div>
+                </div>
+                <div class="metric">
+                    <div class="k">中文缩进 / 段距</div>
+                    <div class="v">0 / 0.35em</div>
+                </div>
+                <div class="metric">
+                    <div class="k">正文粗体</div>
+                    <div class="v">Semibold 600</div>
+                </div>
+                <div class="metric">
+                    <div class="k">正文行高 / 边距</div>
+                    <div class="v">1.64 / 22px</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="block" id="install">
+            <div class="sec-kicker">INSTALLATION</div>
+            <h2 class="sec-title">安装方式</h2>
+            <p class="sec-sub">支持 iPhone、iPad 与 Mac，可通过链接直接唤起 NetNewsWire，或下载压缩包手动导入。</p>
+
+            <div class="install-cols">
+                <div class="install-box">
+                    <h3>链接唤起导入</h3>
+                    <p>在装有 NetNewsWire 的设备上打开本页，点击下方按钮即可唤起导入：</p>
+                    <div style="margin: 16px 0;">
+                        <a class="btn btn-pri" id="btn-nnw" href="#">在 NetNewsWire 中打开</a>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <a class="btn btn-sec" href="https://github.com/fishyo/pocketread-nnw-theme/releases/latest/download/PocketRead.nnwtheme.zip" download>下载主题包 (.zip)</a>
+                    </div>
+                </div>
+
+                <div class="install-box">
+                    <h3>手动导入</h3>
+                    <ol>
+                        <li>下载 <code>PocketRead.nnwtheme.zip</code> 到本地“文件”或“下载”目录；</li>
+                        <li>解压得到 <code>PocketRead.nnwtheme</code> 文件夹；</li>
+                        <li>在 iOS 上通过“共享”选择 NetNewsWire 导入，或在 Mac 上直接双击打开；</li>
+                        <li>在 NetNewsWire 设置 ➔ <strong>Article Theme</strong> 中选择 <strong>PocketRead</strong>。</li>
+                    </ol>
+                    <p style="margin-top: 12px; font-size: 12px; color: var(--muted);">
+                        * 若已安装旧版本，在弹窗中选择 <strong>Overwrite</strong> 即可覆盖更新至 v1.0。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div>PocketRead v1.0 · NetNewsWire 中英文阅读主题</div>
+            <div>MIT License · <a href="https://github.com/fishyo/pocketread-nnw-theme" target="_blank" rel="noopener">GitHub</a></div>
+        </footer>
+    </div>
+
+    <script>
+        const CASES = {
+            finance: {
+                note: '<b>快讯：</b>顶格左对齐，中文段距 0.35em；重点数字使用 Semibold 600，避免 700 粗体在短段里显得过重。',
+                feed: '晚点财经 · 格隆汇精选',
+                ico: '财',
+                title: 'Anthropic 的 IPO，让最早下注的亚马逊和谷歌拿到了巨额账面回报。',
+                meta: 'Nov 22, 2026 at 16:28 · 晚点团队',
+                html: `
+        <p>此次 IPO 公开发行募资 <strong>813 亿美元</strong>，超过 SpaceX 今夏创下的 750 亿美元纪录。</p>
+        <p>周五，承销商全额行使超额配售权，额外买入 1.47 亿股，使 IPO 募资总额升至约 <strong>935 亿美元</strong>。</p>
+        <p>按周五收盘价 <strong>88.91 美元</strong>计算，亚马逊手里的约 19.4 亿股价值约 <strong>1720 亿美元</strong>，谷歌持有的约 17.7 亿股价值约 <strong>1580 亿美元</strong>。</p>
+        <p class="p-sub">利益绑定的算力循环</p>
+        <p>两家合计约 <strong>3300 亿美元</strong>。持股比例上，亚马逊约 14.6%，谷歌约 13.4%，加起来 28%。这场创纪录 IPO 中，没有谁的账面回报比它们更高。</p>
+        <p>钱投出去，又以算力采购的形式流回来。意味着两家巨头比普通股东多了一层利益：它们不仅关心股价，也关心 <strong>Anthropic</strong> 能不能持续支付算力账单。</p>
+      `
+            },
+            feature: {
+                note: '<b>长文：</b>折叠源站多余的空段落，小标题上下留白设为 1.05em / 0.3em，正文字色用炭灰 #5A5957 降低白底反差。',
+                feed: '晚点 LatePost',
+                ico: '晚',
+                title: '药明康德的退路与生路',
+                meta: '晚点团队 · 2026年11月21日 14:30',
+                html: `
+        <p>11 月的无锡已有了初冬的寒意，太湖边的药明康德研发中心大楼依然彻夜通明。</p>
+        <p>过去这一年，全球生物医药融资节奏明显放缓。在资本退潮与地缘博弈的双重夹击下，国内 CXO 行业正在经历一次漫长而剧烈的估值重构。</p>
+        <p class="p-sub">漏斗里的竞赛</p>
+        <p>核心商业模式是将药物发现、工艺开发与商业化生产整合在同一体系内。对药明康德来说，这不仅是一场效率战，更是一场对抗地缘不确定性的防御战。</p>
+        <p>一位接近药明高层的人士透露：“我们目前在新加坡与美国特拉华州的海外产能扩建都在按既定节奏推进。”</p>
+      `
+            },
+            investigation: {
+                note: '<b>深色模式：</b>覆盖部分源站写死的暗色 inline 样式（如 #333 / #666），防止在深色背景下字迹发暗看不清。',
+                feed: 'BBC 中文网',
+                ico: 'B',
+                title: '宠物火化真相调查：逝去爱犬的最后告别',
+                meta: 'BBC 中文特写 · Nov 22, 2026 at 17:16',
+                html: `
+        <p>得知发现爱犬尸体的消息后，柯玲女士悲痛欲绝，她想知道自己的宠物是否真的被火化。</p>
+        <p style="color: #666666;"><strong>警告：本文包含部分读者可能感到不适的图片及文字叙述。</strong></p>
+        <p>自从这段影片在社交媒体上流传后，动物救援组织在马尼拉郊区发现多处弃置点，总共挖出约 170 只死亡宠物的遗骸。</p>
+        <p>这些动物原本被送去火化业者，主人预期它们会被烧成骨灰。如今，许多悲痛的主人必须面对令人心碎的现实：心爱的宠物可能并没有得到他们付费购买的体面送行。</p>
+      `
+            },
+            english: {
+                note: '<b>英文：</b>段距调整为 0.48em，标题启用 text-wrap: pretty 减少末行孤词，行高保持 1.64。',
+                feed: 'The Guardian',
+                ico: 'G',
+                title: 'China is pushing for rapid electrification using low-carbon energy',
+                meta: 'Nov 22, 2026 at 16:27 · Environment Desk',
+                html: `
+        <div class="p-body en">
+          <p>China is pushing for rapid electrification of its economy using low-carbon energy and will help other countries do the same, a senior member of the Chinese delegation at the Cop31 UN climate summit has said.</p>
+          <p>Wang Yi, a professor of energy and environment policy at the Chinese Academy of Sciences and a senior adviser to the government, said: <strong>“End-use electrification is a very clear direction.”</strong></p>
+          <p>We can follow this direction while making the source of electricity clean. That’s the way to go forward, balancing grid reliability and renewable generation targets.</p>
+        </div>
+      `
+            }
+        };
+
+        let activeCase = 'finance';
+
+        function renderArticle() {
+            const data = CASES[activeCase];
+            const screen = document.getElementById('article-screen');
+            const note = document.getElementById('case-note');
+
+            screen.innerHTML = `
+      <div class="p-bar"><div class="p-ico">${data.ico}</div><div class="p-feed">${data.feed}</div></div>
+      <div class="p-h1">${data.title}</div>
+      <div class="p-meta">${data.meta}</div>
+      <hr class="p-div" />
+      <div class="p-body ${activeCase === 'english' ? 'en' : 'cjk'}">
+        ${data.html}
+      </div>
+    `;
+
+            note.innerHTML = data.note;
+        }
+
+        function switchCase(key) {
+            activeCase = key;
+            const btns = document.querySelectorAll('#tabs button');
+            const keys = ['finance', 'feature', 'investigation', 'english'];
+            btns.forEach((btn, idx) => {
+                btn.classList.toggle('active', keys[idx] === key);
+            });
+            renderArticle();
+        }
+
+        function setMode(mode) {
+            const html = document.documentElement;
+            if (mode === 'dark') {
+                html.setAttribute('data-theme', 'dark');
+                document.getElementById('t-dark').classList.add('active');
+                document.getElementById('t-light').classList.remove('active');
+            } else {
+                html.removeAttribute('data-theme');
+                document.getElementById('t-light').classList.add('active');
+                document.getElementById('t-dark').classList.remove('active');
+            }
+        }
+
+        // Auto setup NetNewsWire URL scheme if loaded on HTTP
+        if (window.location.protocol.startsWith('http')) {
+            const zipUrl = new URL('PocketRead.nnwtheme.zip', window.location.href).href;
+            document.getElementById('btn-nnw').href = 'netnewswire://theme/add?url=' + encodeURIComponent(zipUrl);
+        } else {
+            document.getElementById('btn-nnw').href = 'netnewswire://theme/add?url=' + encodeURIComponent('https://github.com/fishyo/pocketread-nnw-theme/releases/latest/download/PocketRead.nnwtheme.zip');
+        }
+
+        // Initial render
+        renderArticle();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Name</key>
+	<string>PocketRead</string>
+	<key>ThemeIdentifier</key>
+	<string>com.fishyo.netnewswire.theme.pocketread</string>
+	<key>CreatorHomePage</key>
+	<string>https://github.com/fishyo/pocketread-nnw-theme</string>
+	<key>CreatorName</key>
+	<string>fishyo</string>
+	<key>Version</key>
+	<integer>1</integer>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+</dict>
+</plist>

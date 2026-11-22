@@ -1,0 +1,160 @@
+<header class="articleHeader">
+	<div class="sourceBar">
+		<img id="nnwImageIcon" class="nnw-nozoom" src="[[avatar_src]]" width="24" height="24" alt="" />
+		<a class="feedlink" href="[[feed_link]]">[[feed_link_title]]</a>
+	</div>
+	<div class="articleTitle">
+		<h1><a href="[[preferred_link]]">[[title]]</a></h1>
+	</div>
+	<div class="articleMeta [[dateline_style]]">
+		<span class="articleByline">[[byline]]</span><span class="articleDate"><a href="[[preferred_link]]">[[datetime_medium]]</a></span>
+	</div>
+	<div class="externalLink"><span class="externalLinkLabel">[[external_link_label]]</span><a href="[[external_link]]">[[external_link_stripped]]</a></div>
+</header>
+
+<hr class="articleDivider" />
+
+<article>
+	<div id="bodyContainer" class="articleBody [[text_size_class]]">[[body]]</div>
+</article>
+
+<script>
+(function () {
+	function trimLeadingSpaces(el) {
+		var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+		var node = walker.nextNode();
+		while (node) {
+			if (!node.nodeValue || /^[\u3000\u00a0\u200b\u200c\u200d\ufeff\s]*$/.test(node.nodeValue)) {
+				node.nodeValue = "";
+				node = walker.nextNode();
+				continue;
+			}
+			node.nodeValue = node.nodeValue.replace(/^[\u3000\u00a0\u200b\u200c\u200d\ufeff\s]+/, "");
+			break;
+		}
+	}
+
+	function isBoldOnlySubheading(el, cleanText) {
+		if (!cleanText || cleanText.length > 36) return false;
+		if (/[。！？.!?；;:：]/.test(cleanText)) return false;
+		if (el.querySelector("img, video, audio, iframe, a")) return false;
+		var children = el.children;
+		if (children.length === 1) {
+			var child = children[0];
+			var childText = (child.textContent || "").replace(/[\u00a0\u200b\ufeff\s]+/g, "");
+			if (childText === cleanText) {
+				var tag = child.tagName;
+				if (tag === "STRONG" || tag === "B") return true;
+				var fw = parseInt(getComputedStyle(child).fontWeight, 10);
+				if (!isNaN(fw) && fw >= 600) return true;
+			}
+		}
+		return false;
+	}
+
+	function enhanceArticle() {
+		var titleBox = document.querySelector(".articleTitle");
+		if (titleBox && titleBox.dataset.nnwTitleChecked !== "1") {
+			titleBox.dataset.nnwTitleChecked = "1";
+			var tText = titleBox.textContent || "";
+			var tCjk = (tText.match(/[\u4e00-\u9fff]/g) || []).length;
+			var tLat = (tText.match(/[A-Za-z]{2,}/g) || []).length;
+			if (tCjk >= 4 && tCjk >= tLat) {
+				titleBox.classList.add("is-cjk-title");
+			}
+		}
+
+		var root = document.getElementById("bodyContainer");
+		if (!root || root.dataset.nnwEnhanced === "1") return;
+		root.dataset.nnwEnhanced = "1";
+
+		// 1. Collapse empty spacer blocks (<p><br></p>, <h3><font><br></font></h3>, <div><br></div>, <section>&nbsp;</section>)
+		var emptyCandidates = root.querySelectorAll("p, div, section, h1, h2, h3, h4, h5, h6, .article-paragraph");
+		for (var k = 0; k < emptyCandidates.length; k++) {
+			var cand = emptyCandidates[k];
+			var candClean = (cand.textContent || "").replace(/[\u3000\u00a0\u200b\u200c\u200d\ufeff\s]+/g, "");
+			if (candClean.length === 0 && !cand.querySelector("img, video, audio, iframe, svg, canvas, object, hr, table, embed, input, button, progress")) {
+				cand.classList.add("nnw-empty-spacer");
+			}
+		}
+
+		// Collapse stray <br> directly between block elements inside body/div/section
+		var brs = root.querySelectorAll("br");
+		for (var b = 0; b < brs.length; b++) {
+			var br = brs[b];
+			var par = br.parentElement;
+			if (!par) continue;
+			var pTag = par.tagName;
+			if (pTag === "DIV" || pTag === "SECTION" || par === root) {
+				var hasDirectText = false;
+				for (var c = 0; c < par.childNodes.length; c++) {
+					var cn = par.childNodes[c];
+					if (cn.nodeType === 3 && cn.nodeValue.replace(/[\u3000\u00a0\u200b\ufeff\s]+/g, "").length > 0) {
+						hasDirectText = true;
+						break;
+					}
+				}
+				if (!hasDirectText) {
+					br.classList.add("nnw-empty-spacer");
+				}
+			}
+		}
+
+		// Clean hardcoded dark inline font colors in dark mode to prevent black-on-black invisibility
+		var isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+		if (isDark) {
+			var styledEls = root.querySelectorAll("[style*='color'], font[color]");
+			for (var s = 0; s < styledEls.length; s++) {
+				var se = styledEls[s];
+				if (se.style && se.style.color) se.style.color = "";
+				if (se.hasAttribute("color")) se.removeAttribute("color");
+			}
+		}
+
+		var blocks = root.querySelectorAll("p, .article-paragraph");
+		var proseSample = "";
+		for (var i = 0; i < blocks.length; i++) {
+			var el = blocks[i];
+			if (el.classList.contains("nnw-empty-spacer")) continue;
+			if (!el.closest("pre, code")) {
+				proseSample += " " + (el.textContent || "");
+			}
+		}
+
+		// 2. Detect CJK-dominant article for smart first-line indent & paragraph spacing
+		var sampleText = proseSample.trim() || (root.textContent || "");
+		var cjkMatches = sampleText.match(/[\u4e00-\u9fff]/g);
+		var latinMatches = sampleText.match(/[A-Za-z]{2,}/g);
+		var cjkCount = cjkMatches ? cjkMatches.length : 0;
+		var latinWords = latinMatches ? latinMatches.length : 0;
+
+		if (cjkCount >= 16 && cjkCount >= latinWords) {
+			root.classList.add("is-cjk");
+			for (var j = 0; j < blocks.length; j++) {
+				var p = blocks[j];
+				if (p.classList.contains("nnw-empty-spacer")) continue;
+				if (p.closest("blockquote, li, figure, figcaption, table, pre")) {
+					p.classList.add("nnw-no-indent");
+					continue;
+				}
+				if (p.querySelector("img, video, audio, iframe, svg, figure, table")) {
+					p.classList.add("nnw-no-indent");
+					continue;
+				}
+				var pClean = (p.textContent || "").replace(/[\u3000\u00a0\u200b\u200c\u200d\ufeff\s]+/g, "");
+				if (isBoldOnlySubheading(p, pClean)) {
+					p.classList.add("nnw-subheading");
+					continue;
+				}
+				// Strip author-typed leading full-width spaces to prevent double 4em indent
+				trimLeadingSpaces(p);
+			}
+		}
+	}
+
+	enhanceArticle();
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", enhanceArticle);
+	}
+})();
+</script>

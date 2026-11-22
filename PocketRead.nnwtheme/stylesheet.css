@@ -1,0 +1,810 @@
+/*
+ * PocketRead — iOS-First NetNewsWire Theme (Tuned for iPhone 17 / 402pt width)
+ * Warm Paper Light + OLED Dark, Native iOS Sans-Serif, Comfortable Dynamic Type Scaling.
+ */
+
+:root {
+	color-scheme: light dark;
+
+	--font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Text", "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+	--font-display: -apple-system, BlinkMacSystemFont, "PingFang SC", "SF Pro Display", "Hiragino Sans GB", sans-serif;
+	--font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+	/* Base size fallback for macOS / previews (overridden on iOS using [[font-size]]) */
+	--body-size: 18.2px;
+	--body-line-height: 1.64;
+	--line-length: 36;
+
+	/* Warm Paper Light Palette */
+	--bg-color: #FAF8F4;
+	--title-color: #1A1918;
+	--text-color: #5A5957;
+	--secondary-color: #72706D;
+	--muted-color: #8C8882;
+	--accent-color: #185EC2;
+	--link-underline: rgba(24, 94, 194, 0.34);
+	--divider-color: rgba(28, 25, 21, 0.10);
+	--quote-bg: rgba(28, 25, 21, 0.035);
+	--quote-border: rgba(24, 94, 194, 0.45);
+	--code-bg: #F1EDE5;
+	--code-border: rgba(28, 25, 21, 0.08);
+	--code-color: #2A2520;
+	--chip-bg: rgba(28, 25, 21, 0.055);
+	--table-head-bg: rgba(28, 25, 21, 0.04);
+	--table-border: rgba(28, 25, 21, 0.12);
+	--system-message-color: #8C867D;
+	--footnote-bg: #E6E0D6;
+	--footnote-fg: #3C3731;
+	--footnote-active-bg: #185EC2;
+	--footnote-active-fg: #FFFFFF;
+	--popover-bg: #FFFFFF;
+	--popover-border: rgba(28, 25, 21, 0.16);
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* OLED-Friendly Deep Dark Palette */
+		--bg-color: #0B0B0D;
+		--title-color: #F4F2ED;
+		--text-color: #DFDDD7;
+		--secondary-color: #B4B0A8;
+		--muted-color: #88847C;
+		--accent-color: #69A7FF;
+		--link-underline: rgba(105, 167, 255, 0.40);
+		--divider-color: rgba(255, 255, 255, 0.11);
+		--quote-bg: rgba(255, 255, 255, 0.045);
+		--quote-border: rgba(105, 167, 255, 0.55);
+		--code-bg: #17171B;
+		--code-border: rgba(255, 255, 255, 0.10);
+		--code-color: #E5E2DB;
+		--chip-bg: rgba(255, 255, 255, 0.075);
+		--table-head-bg: rgba(255, 255, 255, 0.06);
+		--table-border: rgba(255, 255, 255, 0.13);
+		--system-message-color: #6C6963;
+		--footnote-bg: #2A2A30;
+		--footnote-fg: #D8D6D0;
+		--footnote-active-bg: #69A7FF;
+		--footnote-active-fg: #0B0B0D;
+		--popover-bg: #1A1A1F;
+		--popover-border: rgba(255, 255, 255, 0.16);
+	}
+}
+
+html {
+	background-color: var(--bg-color);
+	font-family: var(--font-sans);
+	font-size: 18.2px;
+	font-size: var(--body-size);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+body {
+	margin: 0 auto;
+	max-width: calc(var(--line-length) * 1rem);
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	line-height: var(--body-line-height);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	box-sizing: border-box;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+}
+
+/* System States (Loading / No Selection) */
+
+.systemMessage {
+	position: absolute;
+	top: 45%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: var(--system-message-color);
+	font-size: 0.95rem;
+	font-weight: 500;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: default;
+}
+
+/* Header & Title Block (Mobile-First, Anti-Mac-Bloat) */
+
+.articleHeader {
+	padding-top: 4px;
+}
+
+.sourceBar {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-height: 24px;
+	margin-bottom: 12px;
+}
+
+#nnwImageIcon {
+	width: 24px;
+	height: 24px !important;
+	min-width: 24px;
+	border-radius: 6px;
+	object-fit: cover;
+	flex-shrink: 0;
+	margin: 0;
+	display: block;
+}
+
+#nnwImageIcon[src=""] {
+	display: none;
+}
+
+.feedlink {
+	font-size: 0.78rem;
+	line-height: 1.3;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: var(--muted-color);
+	text-decoration: none;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.feedlink:visited {
+	color: var(--muted-color);
+}
+
+.articleTitle {
+	margin: 0 0 10px 0;
+}
+
+.articleTitle:has(h1 a:empty) {
+	display: none;
+}
+
+.articleTitle h1 {
+	margin: 0;
+	padding: 0;
+	font-family: var(--font-display);
+	font-size: clamp(23px, 1.38rem, 42px);
+	line-height: 1.32;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	color: var(--title-color);
+	text-align: left;
+	text-wrap: pretty;
+	text-autospace: normal;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	-webkit-hyphens: none;
+	hyphens: none;
+}
+
+.articleTitle.is-cjk-title h1 {
+	text-align: left;
+	text-wrap: auto;
+}
+
+.articleTitle h1 a,
+.articleTitle h1 a:link,
+.articleTitle h1 a:visited {
+	color: var(--title-color);
+	text-decoration: none;
+}
+
+.articleMeta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: baseline;
+	row-gap: 2px;
+	font-size: 0.76rem;
+	line-height: 1.45;
+	color: var(--muted-color);
+	font-variant-caps: normal;
+	letter-spacing: 0;
+	text-autospace: normal;
+}
+
+.articleMeta a,
+.articleMeta a:link,
+.articleMeta a:visited {
+	color: inherit;
+	text-decoration: none;
+}
+
+.articleByline {
+	color: var(--secondary-color);
+	font-weight: 500;
+}
+
+.articleByline:not(:empty)::after {
+	content: "·";
+	margin: 0 0.45em;
+	color: var(--muted-color);
+	opacity: 0.7;
+}
+
+/* Untitled posts (e.g. Mastodon / microblogs) elevate dateline cleanly */
+.articleDatelineTitle {
+	font-size: 0.84rem;
+	font-weight: 600;
+	color: var(--title-color);
+}
+
+.externalLink {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	max-width: 100%;
+	margin-top: 10px;
+	padding: 4px 10px;
+	border-radius: 999px;
+	background: var(--chip-bg);
+	font-size: 0.74rem;
+	line-height: 1.35;
+	color: var(--muted-color);
+}
+
+.externalLink:has(a[href=""]) {
+	display: none;
+}
+
+.externalLinkLabel {
+	flex-shrink: 0;
+	font-weight: 500;
+}
+
+.externalLink a,
+.externalLink a:link,
+.externalLink a:visited {
+	color: var(--accent-color);
+	text-decoration: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.articleDivider {
+	border: none;
+	border-top: 1px solid var(--divider-color);
+	margin: 16px 0 18px 0;
+}
+
+/* Article Body Typography */
+
+.articleBody {
+	font-size: 1rem;
+	line-height: var(--body-line-height);
+	color: var(--text-color);
+	text-align: left;
+	text-autospace: normal;
+}
+
+.articleBody > :first-child {
+	margin-top: 0;
+}
+
+.articleBody p,
+.articleBody .article-paragraph,
+.articleBody [class*="paragraph"]:not(:has(p, .article-paragraph)) {
+	margin: 0 0 0.48em 0;
+}
+
+.articleBody p:empty,
+.articleBody div:empty:not([class]),
+.articleBody section:empty,
+.articleBody h1:empty,
+.articleBody h2:empty,
+.articleBody h3:empty,
+.articleBody h4:empty,
+.articleBody h5:empty,
+.articleBody h6:empty,
+.articleBody .article-paragraph:empty,
+.articleBody .nnw-empty-spacer {
+	display: none !important;
+}
+
+.articleBody font {
+	color: inherit !important;
+}
+
+@media (prefers-color-scheme: dark) {
+	.articleBody [style*="color"] {
+		color: inherit !important;
+	}
+	.articleBody [color] {
+		color: inherit !important;
+	}
+}
+
+.articleBody b,
+.articleBody strong {
+	color: #1D1C1A;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+@media (prefers-color-scheme: dark) {
+	.articleBody b,
+	.articleBody strong {
+		color: #F4F2ED !important;
+	}
+}
+
+/* Smart Chinese Typography: modern flush-left (no indent) + 0.9em elegant paragraph rhythm */
+.articleBody.is-cjk {
+	letter-spacing: 0.015em;
+}
+
+.articleBody.is-cjk p,
+.articleBody.is-cjk .article-paragraph,
+.articleBody.is-cjk [class*="paragraph"]:not(:has(p, .article-paragraph)) {
+	text-indent: 0 !important;
+	margin-top: 0 !important;
+	margin-bottom: 0.35em !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+.articleBody.is-cjk h1,
+.articleBody.is-cjk h2,
+.articleBody.is-cjk h3,
+.articleBody.is-cjk h4,
+.articleBody.is-cjk h5,
+.articleBody.is-cjk h6 {
+	color: var(--title-color);
+	margin-top: 1.05em !important;
+	margin-bottom: 0.3em !important;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+}
+
+/* Never indent non-prose blocks, media paragraphs, or bold subheading paragraphs */
+.articleBody.is-cjk p:has(img, video, audio, iframe, svg, figure, table) {
+	text-indent: 0 !important;
+	margin-top: 0.65em !important;
+	margin-bottom: 0.65em !important;
+}
+
+.articleBody.is-cjk blockquote p,
+.articleBody.is-cjk blockquote .article-paragraph,
+.articleBody.is-cjk li p,
+.articleBody.is-cjk li .article-paragraph,
+.articleBody.is-cjk figure p,
+.articleBody.is-cjk figcaption p,
+.articleBody.is-cjk table p,
+.articleBody.is-cjk .nnw-no-indent {
+	text-indent: 0 !important;
+}
+
+.articleBody.is-cjk blockquote > p:last-child,
+.articleBody.is-cjk li > p:last-child {
+	margin-bottom: 0 !important;
+}
+
+.articleBody.is-cjk .nnw-subheading {
+	text-indent: 0 !important;
+	font-weight: 700;
+	color: var(--title-color);
+	margin-top: 1.25em !important;
+	margin-bottom: 0.45em !important;
+}
+
+.articleBody h1,
+.articleBody h2,
+.articleBody h3,
+.articleBody h4,
+.articleBody h5,
+.articleBody h6 {
+	font-family: var(--font-display);
+	color: var(--title-color);
+	line-height: 1.35;
+	font-weight: 700;
+	margin: 1.55em 0 0.55em 0;
+	text-wrap: pretty;
+	-webkit-hyphens: none;
+	hyphens: none;
+}
+
+/* Keep in-article headings strictly subordinate to the main article title */
+.articleBody h1 { font-size: 1.24rem; }
+.articleBody h2 { font-size: 1.16rem; }
+.articleBody h3 { font-size: 1.06rem; }
+.articleBody h4 { font-size: 1.00rem; }
+.articleBody h5,
+.articleBody h6 { font-size: 0.94rem; color: var(--secondary-color); }
+
+.articleBody h1 + p,
+.articleBody h2 + p,
+.articleBody h3 + p,
+.articleBody h4 + p {
+	margin-top: 0;
+}
+
+/* Links */
+
+a,
+a:visited {
+	color: var(--accent-color);
+	text-decoration: none;
+}
+
+a :is(i, em, strong, b) {
+	color: inherit;
+}
+
+.articleBody a:link,
+.articleBody a:visited,
+.nnw-enclosure-caption a:link,
+.nnw-enclosure-caption a:visited,
+.nnw-primary-image-caption a:link,
+.nnw-primary-image-caption a:visited {
+	color: var(--accent-color);
+	text-decoration: underline;
+	text-decoration-color: var(--link-underline);
+	text-decoration-thickness: 1.25px;
+	text-underline-offset: 3px;
+}
+
+.articleBody a:has(img),
+.articleBody a:has(img):link,
+.articleBody a:has(img):visited {
+	text-decoration: none;
+}
+
+.articleBody sup a:link,
+.articleBody sup a:visited {
+	text-decoration: none;
+}
+
+/* Lists */
+
+.articleBody ul,
+.articleBody ol {
+	margin: 0.8em 0 1.05em 0;
+	padding-inline-start: 1.35em;
+}
+
+.articleBody li {
+	margin-bottom: 0.42em;
+}
+
+.articleBody li:last-child {
+	margin-bottom: 0;
+}
+
+.articleBody li > p {
+	margin-bottom: 0.45em;
+}
+
+.articleBody li > p:last-child {
+	margin-bottom: 0;
+}
+
+/* Blockquotes */
+
+blockquote {
+	margin: 1.15em 0;
+	padding: 0.72em 1em;
+	border-inline-start: 3px solid var(--quote-border);
+	background: var(--quote-bg);
+	border-radius: 0 8px 8px 0;
+	color: var(--secondary-color);
+}
+
+blockquote > :first-child {
+	margin-top: 0;
+}
+
+blockquote > :last-child {
+	margin-bottom: 0;
+}
+
+/* Code & Preformatted Blocks */
+
+code,
+pre {
+	font-family: var(--font-mono);
+	color: var(--code-color);
+	-webkit-hyphens: none;
+	hyphens: none;
+}
+
+code {
+	font-size: 0.84em;
+	background: var(--code-bg);
+	padding: 0.12em 0.36em;
+	border-radius: 5px;
+}
+
+pre {
+	max-width: 100%;
+	margin: 1.15em 0;
+	padding: 12px 14px;
+	background: var(--code-bg);
+	border: 1px solid var(--code-border);
+	border-radius: 10px;
+	overflow-x: auto;
+	overflow-y: hidden;
+	-webkit-overflow-scrolling: touch;
+	word-wrap: normal;
+	word-break: normal;
+	line-height: 1.5;
+}
+
+pre code {
+	background: transparent;
+	padding: 0;
+	border-radius: 0;
+	font-size: 0.80em;
+	display: block;
+}
+
+/* Media, Images, Figures & NetNewsWire 7.3 Primary Media / Enclosures */
+
+.articleBody img,
+.nnw-primary-media img,
+.nnw-enclosures img,
+figure,
+video,
+object {
+	max-width: 100%;
+	height: auto !important;
+}
+
+.articleBody img:not(.emoji):not(.twemoji):not(.wp-smiley),
+.nnw-primary-image img,
+.nnw-enclosure-image img {
+	border-radius: 8px;
+}
+
+.articleBody p > img:only-child,
+.articleBody figure img,
+.nnw-primary-image img,
+.nnw-enclosure-image img {
+	display: block;
+	margin: 1.1em auto;
+}
+
+figure {
+	margin: 1.2em 0 1.35em 0;
+}
+
+figure img {
+	margin: 0 auto;
+}
+
+figcaption,
+.nnw-primary-image-caption,
+.nnw-enclosure-caption {
+	margin-top: 0.45em;
+	font-size: 0.80rem;
+	line-height: 1.48;
+	color: var(--muted-color);
+}
+
+.nnw-primary-media {
+	margin: 0 0 1.2em 0;
+}
+
+.nnw-primary-image {
+	margin: 0;
+}
+
+.nnw-enclosures {
+	margin-top: 1.6em;
+	padding-top: 1em;
+	border-top: 1px solid var(--divider-color);
+}
+
+.nnw-enclosure {
+	margin: 1em 0;
+}
+
+.nnw-enclosure video {
+	width: 100%;
+	border-radius: 8px;
+}
+
+iframe {
+	max-width: 100%;
+	margin: 0 auto;
+	border-radius: 8px;
+}
+
+iframe.nnw-constrained {
+	max-height: 50vw;
+}
+
+.iframeWrap {
+	position: relative;
+	display: block;
+	padding-top: 56.25%;
+	margin: 1.15em 0;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.iframeWrap iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100% !important;
+	width: 100% !important;
+	border-radius: 0;
+}
+
+/* Tables (wrapped in .nnw-overflow by NetNewsWire main.js) */
+
+.nnw-overflow {
+	margin: 1.15em 0;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.nnw-overflow table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 0.85rem;
+	line-height: 1.45;
+}
+
+.nnw-overflow th,
+.nnw-overflow td {
+	padding: 8px 10px;
+	border-bottom: 1px solid var(--table-border);
+	text-align: start;
+	vertical-align: top;
+	-webkit-hyphens: none;
+	word-break: normal;
+}
+
+.nnw-overflow th {
+	font-weight: 600;
+	color: var(--title-color);
+	background: var(--table-head-bg);
+}
+
+.nnw-overflow :is(thead, tbody, tfoot):last-child > tr:last-child :is(td, th) {
+	border-bottom: none;
+}
+
+/* Dividers, Superscripts & Feed-Specific Cleanup */
+
+.articleBody hr {
+	border: none;
+	border-top: 1px solid var(--divider-color);
+	margin: 1.6em 0;
+}
+
+sup {
+	vertical-align: top;
+	position: relative;
+	bottom: 0.2em;
+	font-size: 0.74em;
+}
+
+sub {
+	vertical-align: bottom;
+	position: relative;
+	top: 0.2em;
+	font-size: 0.74em;
+}
+
+.feedbin--article-wrap {
+	border-top: 1px solid var(--divider-color);
+	padding-top: 1em;
+}
+
+/* Newsfoot Footnotes */
+
+body a.footnote,
+body a.footnote:visited,
+.newsfoot-footnote-popover + a.footnote:hover {
+	background: var(--footnote-bg);
+	color: var(--footnote-fg);
+	transition: background-color 180ms ease-out;
+}
+
+a.footnote:hover,
+.newsfoot-footnote-popover + a.footnote {
+	background: var(--footnote-active-bg);
+	color: var(--footnote-active-fg);
+}
+
+.newsfoot-footnote-popover {
+	background: var(--popover-border);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+	color: var(--text-color);
+	padding: 1px;
+	border-radius: 10px;
+	max-width: min(90vw, 34em);
+}
+
+.newsfoot-footnote-popover-arrow {
+	background: var(--popover-bg);
+	border: 1px solid var(--popover-border);
+}
+
+.newsfoot-footnote-popover-inner {
+	background: var(--popover-bg);
+	border-radius: 9px;
+	font-size: 0.88rem;
+	line-height: 1.55;
+}
+
+/* ==========================================================================
+   iOS Specific (iPhone 17 / 402pt viewport & iOS Dynamic Type scaling)
+   ========================================================================== */
+@supports (-webkit-touch-callout: none) {
+	:root {
+		/* NetNewsWire iOS replaces [[font-size]] with UIFont.preferredFont(.body).pointSize (default 17.0).
+		   Scaling by 1.07x yields ~18.2px at standard Dynamic Type while preserving system scaling. */
+		--ios-dynamic-size: [[font-size]]px;
+		--body-size: clamp(15.5px, calc([[font-size]]px * 1.07), 30px);
+		font-size: clamp(15.5px, calc([[font-size]]px * 1.07), 30px);
+	}
+
+	body {
+		padding-top: 8px;
+		padding-left: max(22px, env(safe-area-inset-left));
+		padding-right: max(22px, env(safe-area-inset-right));
+		padding-bottom: max(56px, calc(env(safe-area-inset-bottom) + 32px));
+		word-break: break-word;
+		-webkit-hyphens: none;
+		hyphens: none;
+		-webkit-text-size-adjust: none;
+	}
+
+	/* Ensure iPad wide view keeps comfortable measure without feeling pinched */
+	@media (min-width: 700px) {
+		body {
+			padding-left: 36px;
+			padding-right: 36px;
+		}
+	}
+}
+
+/* ==========================================================================
+   macOS Fallback (so the theme still looks great if synced/tested on Mac)
+   ========================================================================== */
+@supports not (-webkit-touch-callout: none) {
+	:root {
+		--body-size: 18px;
+	}
+
+	:root:has(.articleBody.smallText) {
+		--body-size: 15px;
+	}
+
+	:root:has(.articleBody.mediumText) {
+		--body-size: 17px;
+	}
+
+	:root:has(.articleBody.largeText) {
+		--body-size: 19px;
+	}
+
+	:root:has(.articleBody.xlargeText) {
+		--body-size: 21px;
+	}
+
+	:root:has(.articleBody.xxlargeText) {
+		--body-size: 24px;
+	}
+
+	body {
+		padding: 24px 40px 64px 40px;
+	}
+
+	.articleTitle h1 {
+		font-size: clamp(24px, 1.55rem, 34px);
+	}
+
+	.articleBody a:hover {
+		text-decoration-color: var(--accent-color);
+	}
+}
